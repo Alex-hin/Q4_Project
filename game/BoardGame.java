@@ -61,6 +61,13 @@ public class BoardGame{
             g.drawLine(j * cellSize, 0, j * cellSize, rows * cellSize);
         }
     }
+    public void drawStartScreen(Graphics g) {//method for drawing the start screen
+            g.setColor(Color.BLACK);
+            g.fillRect(0, 0, getWidth(), getHeight());
 
-	
+            g.setColor(Color.WHITE);
+            g.setFont(new Font("Arial", Font.BOLD, 36));  
+            g.drawString("Scrabble", getWidth() / 2 - 80, 80);          
+    }
+
 }
