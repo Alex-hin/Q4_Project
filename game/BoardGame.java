@@ -1,5 +1,6 @@
 package game;
 
+import java.util.*;
 import java.awt.Color;
 import java.awt.Graphics;
 
@@ -18,9 +19,12 @@ public class BoardGame{
 
 
 	// Instance variables
-	
+    private Tile[] bank;
+	private ArrayList<Tile> p1Tiles;
 	public BoardGame(){
-		
+		p1Tiles = new ArrayList<Tile>();
+        bank = new Tile{}();
+
 	}
 
 
