@@ -22,12 +22,12 @@ public class Screen extends JPanel implements KeyListener{
 
 
 	// instance variables
-	
+	BoardGame scrabble;
 
 
 	public Screen(){
 
-
+		scrabble = new BoardGame();
         setFocusable(true); 
 		setLayout(null);
 		// add Key listener
@@ -45,6 +45,7 @@ public class Screen extends JPanel implements KeyListener{
 	public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+		scrabble.drawBoard(g);
 
 	} 
 
