@@ -1,8 +1,10 @@
+package game;
+
 public class Tile extends Sprite {
-    private char letter;
+    private String letter;
     private int value;
 
-    public Tile(char letter, int value, int x, int y, int width, int height) {
+    public Tile(String letter, int value, int x, int y, int width, int height) {
         super(x, y, width, height);
         this.letter = letter;
         this.value = value;

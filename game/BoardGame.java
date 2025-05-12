@@ -8,9 +8,7 @@ import java.awt.Graphics;
 // import for playing sound
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import java.io.File;
-
-
+import java.io.*;
 
 
 
@@ -19,11 +17,13 @@ public class BoardGame{
 
 
 	// Instance variables
-    private Tile[] bank;
+    private ArrayList<Tile> bank;
 	private ArrayList<Tile> p1Tiles;
 	public BoardGame(){
 		p1Tiles = new ArrayList<Tile>();
-        bank = new Tile{}();
+        bank = new ArrayList<Tile>();
+
+        readBank();
 
 	}
 
@@ -39,6 +39,20 @@ public class BoardGame{
         }
 
 
+    }
+
+    private void readBank(){
+        String filePath = "game/letterBank";
+
+        try(BufferedReader br = new BufferedReader(new FileReader(filePath))){
+            String line;
+            while ((line = br.readLine()) != null) {
+                bank.add(new Tile(line.substring(0,1), Integer.parseInt(line.substring(2)), 0, 0, 40, 40));
+            }
+
+        } catch (IOException e){
+            System.err.println("Error reading file: " + e.getMessage());
+        }
     }
 
 

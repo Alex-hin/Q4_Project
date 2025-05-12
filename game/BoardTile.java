@@ -1,3 +1,5 @@
+package game;
+
 public class BoardTile extends Sprite {
     private String multiplier; // e.g. "DL", "TL", "DW", etc.
 
