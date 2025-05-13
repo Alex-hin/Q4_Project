@@ -1,4 +1,5 @@
 package game;
+import java.awt.*;
 
 public class Sprite {
     protected int x, y; // position on screen
