@@ -1,8 +1,10 @@
 package game;
 
 import java.util.*;
+import java.awt.*;
 import java.awt.Color;
 import java.awt.Graphics;
+
 
 
 // import for playing sound
@@ -77,11 +79,11 @@ public class BoardGame{
     }
     public void drawStartScreen(Graphics g) {//method for drawing the start screen
             g.setColor(Color.BLACK);
-            g.fillRect(0, 0, getWidth(), getHeight());
+            g.fillRect(0, 0, 800, 800);
 
             g.setColor(Color.WHITE);
             g.setFont(new Font("Arial", Font.BOLD, 36));  
-            g.drawString("Scrabble", getWidth() / 2 - 80, 80);          
+            g.drawString("Scrabble", 320, 80);          
     }
 
 }
