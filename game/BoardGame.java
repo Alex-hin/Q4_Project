@@ -26,8 +26,20 @@ public class BoardGame{
         bank = new ArrayList<Tile>();
 
         readBank();
-
+        giveInitialTiles();
 	}
+    public void giveInitialTiles() {
+        Random rand = new Random();
+        for (int i = 0; i < 7 && !bank.isEmpty(); i++) {
+            int index = rand.nextInt(bank.size());
+            Tile drawn = bank.remove(index);
+            drawn.moveTo(100 + i * 40, 700); // Moved to visible area
+            p1Tiles.add(drawn);
+        }
+
+    }
+
+
 
 
 	 // Play sound. You can find free .wav files at wavsource.com.
@@ -44,7 +56,7 @@ public class BoardGame{
     }
 
     private void readBank(){
-        String filePath = "game/letterBank";
+        String filePath = "game/letterBank.txt";
 
         try(BufferedReader br = new BufferedReader(new FileReader(filePath))){
             String line;
@@ -56,27 +68,31 @@ public class BoardGame{
             System.err.println("Error reading file: " + e.getMessage());
         }
     }
-
+    
 
 	
 	public void drawBoard(Graphics g) {
-        int rows = 15;
-        int cols = 15;
-        int cellSize = 40; // You can change this to resize the grid
+        int rows = 15, cols = 15, cellSize = 40;
 
-        // Set the color for the grid lines
-        g.setColor(Color.BLACK);
-
-        // Draw horizontal lines
-        for (int i = 0; i <= rows; i++) {
-            g.drawLine(0, i * cellSize, cols * cellSize, i * cellSize);
+        // Draw board grid and blank tiles
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                int x = col * cellSize;
+                int y = row * cellSize;
+                Tile blank = new Tile("", 0, x, y, cellSize, cellSize);
+                blank.draw(g);
+            }
         }
 
-        // Draw vertical lines
-        for (int j = 0; j <= cols; j++) {
-            g.drawLine(j * cellSize, 0, j * cellSize, rows * cellSize);
+
+    }
+
+    public void drawPlayerTiles(Graphics g) {
+        for (Tile t : p1Tiles) {
+            t.drawPTiles(g);
         }
     }
+
     public void drawStartScreen(Graphics g) {//method for drawing the start screen
             g.setColor(Color.BLACK);
             g.fillRect(0, 0, 800, 800);

@@ -13,7 +13,19 @@ public class Tile extends Sprite {
 
     @Override
     public void draw(Graphics g) {
+        g.setColor(Color.WHITE);
+        g.fillRect(x, y, width, height);
+        g.setColor(Color.BLACK);
         g.drawRect(x, y, width, height);
-        g.drawString(letter + "", x + width/2, y + height/2);
+        g.drawString(letter, x + width / 2 - 5, y + height / 2 + 5);
+    }
+    public void drawPTiles(Graphics g) {
+        g.setColor(Color.YELLOW);
+        g.fillRect(x, y, width, height);
+        g.setColor(Color.BLACK);
+        g.drawRect(x, y, width, height);
+        g.setFont(new Font("Arial", Font.BOLD, 18));  
+        g.drawString(letter, x + width / 2 - 5, y + height / 2 + 6); 
+
     }
 }

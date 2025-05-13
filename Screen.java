@@ -46,6 +46,7 @@ public class Screen extends JPanel implements KeyListener{
         super.paintComponent(g);
 
 		scrabble.drawBoard(g);
+		scrabble.drawPlayerTiles(g);
 
 	} 
 
