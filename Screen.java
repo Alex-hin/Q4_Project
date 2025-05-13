@@ -21,6 +21,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener{
 
 	// instance variables
 	BoardGame scrabble;
+	Tile selectedTile;
 
 
 	public Screen(){
@@ -45,7 +46,6 @@ public class Screen extends JPanel implements KeyListener, MouseListener{
         super.paintComponent(g);
 
 		scrabble.drawBoard(g);
-		scrabble.drawPlayerTiles(g);
 
 	} 
 
@@ -87,14 +87,17 @@ public class Screen extends JPanel implements KeyListener, MouseListener{
 		
 		if(y >= 700 && y <= 740 && x >= 100 && x <= 100 + 40 * scrabble.getNumTiles()){
 			int tileX = (x - 100)/40;
-			Tile selectedTile = scrabble.getTile(tileX);
-			//int tileY = (y-700)/40;
+			selectedTile = scrabble.getTile(tileX);
 		}
+		
 
+		System.out.println(selectedTile);
 		if(x <= 600 && y <= 600){
 			scrabble.playTile(boardX, boardY, selectedTile);
+			selectedTile = null;
 		}
 
+		repaint();
 
 
 	}

@@ -19,11 +19,17 @@ public class BoardGame{
 
 
 	// Instance variables
-    private ArrayList<Tile> bank;
-	private ArrayList<Tile> p1Tiles;
-	public BoardGame(){
+    private ArrayList<Tile> bank, p1Tiles, currentPlayer, oldTiles;
+    private Tile[][] board;
+
+	
+    
+    public BoardGame(){
 		p1Tiles = new ArrayList<Tile>();
         bank = new ArrayList<Tile>();
+        currentPlayer = p1Tiles;
+        oldTiles = currentPlayer;
+        board = new Tile[15][15];
 
         readBank();
         giveInitialTiles();
@@ -84,12 +90,16 @@ public class BoardGame{
             }
         }
 
+        drawTilesBoard(g);
+        drawPlayerTiles(g);
+
 
     }
 
     public void drawPlayerTiles(Graphics g) {
-        for (Tile t : p1Tiles) {
-            t.drawPTiles(g);
+        for(int i = 0; i < currentPlayer.size(); i++){
+            currentPlayer.get(i).setLoc(100 + 40 * i);
+            currentPlayer.get(i).drawPTiles(g);
         }
     }
 
@@ -100,6 +110,33 @@ public class BoardGame{
             g.setColor(Color.WHITE);
             g.setFont(new Font("Arial", Font.BOLD, 36));  
             g.drawString("Scrabble", 320, 80);          
+    }
+
+    public int getNumTiles(){
+        return currentPlayer.size();
+    }
+
+    public Tile getTile(int index){
+        return currentPlayer.get(index);
+    }
+
+    public void playTile(int x, int y, Tile tile){
+        if(board[x][y] == null){
+            board[x][y] = tile;
+            currentPlayer.remove(tile);
+        }
+    }
+
+    private void drawTilesBoard(Graphics g){
+        for(int i = 0; i < board.length; i++){
+            for(int f = 0; f < board[i].length; f++){
+                if(board[i][f]!= null){
+                    board[i][f].setLoc(i * 40, f * 40);
+                    board[i][f].drawPTiles(g);
+                }
+                
+            }
+        }
     }
 
 }
