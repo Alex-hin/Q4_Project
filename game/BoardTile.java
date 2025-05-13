@@ -1,4 +1,5 @@
 package game;
+import java.awt.*;
 
 public class BoardTile extends Sprite {
     private String multiplier; // e.g. "DL", "TL", "DW", etc.
