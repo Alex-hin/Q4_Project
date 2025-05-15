@@ -46,4 +46,8 @@ public class Tile extends Sprite {
     public int getXPos(){
         return x;
     }
+
+    public String getLetter(){
+        return letter;
+    }
 }

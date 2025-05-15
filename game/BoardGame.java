@@ -2,55 +2,49 @@ package game;
 
 import java.util.*;
 import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
 
 // import for playing sound
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import java.io.*;
 
+public class BoardGame {
 
-
-
-public class BoardGame{
-
-
-	// Instance variables
+    // Instance variables
     private ArrayList<Tile> bank, p1Tiles, currentPlayer, oldTiles;
     private ArrayList<String> allWords;
     private Tile[][] board;
     private int[][] newTiles;
     private static int counter;
+    private static final int BOARD_SIZE = 15;
 
-	
-    
-    public BoardGame(){
-		p1Tiles = new ArrayList<Tile>();
+    public BoardGame() {
+        p1Tiles = new ArrayList<Tile>();
         bank = new ArrayList<Tile>();
         allWords = new ArrayList<String>();
         currentPlayer = p1Tiles;
         oldTiles = currentPlayer;
-        board = new Tile[15][15];
+        board = new Tile[BOARD_SIZE][BOARD_SIZE];
         newTiles = new int[2][7];
 
         readBank();
         readWords();
         giveInitialTiles();
-	}
-    public void giveInitialTiles() {
-        Random rand = new Random();
-        for (int i = 0; i < 7 && !bank.isEmpty(); i++) {
-            int index = rand.nextInt(bank.size());
-            Tile drawn = bank.remove(index);
-            drawn.moveTo(100 + i * 40, 700); // Moved to visible area
-            p1Tiles.add(drawn);
-        }
-
     }
 
+    public void giveInitialTiles() {
+        Random rand = new Random();
+        while (p1Tiles.size() < 7 && bank.size() > 0) {
+            int index = rand.nextInt(bank.size());
+            Tile drawn = bank.remove(index);
+            drawn.moveTo(100 + p1Tiles.size() * 40, 700);
+            p1Tiles.add(drawn);
+        }
+    }
 
-
-
-	 // Play sound. You can find free .wav files at wavsource.com.
+    // Play sound. You can find free .wav files at wavsource.com.
     public void playSound() {
         try {
             Clip clip = AudioSystem.getClip();
@@ -59,41 +53,37 @@ public class BoardGame{
         } catch (Exception exc) {
             exc.printStackTrace(System.out);
         }
-
-
     }
 
-    private void readBank(){
+    private void readBank() {
         String filePath = "game/letterBank.txt";
 
-        try(BufferedReader br = new BufferedReader(new FileReader(filePath))){
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = br.readLine()) != null) {
-                bank.add(new Tile(line.substring(0,1), Integer.parseInt(line.substring(2)), 0, 0, 40, 40));
+                bank.add(new Tile(line.substring(0, 1), Integer.parseInt(line.substring(2)), 0, 0, 40, 40));
             }
 
-        } catch (IOException e){
+        } catch (IOException e) {
             System.err.println("Error reading file: " + e.getMessage());
         }
     }
 
-    private void readWords(){
+    private void readWords() {
         String filePath = "game/words.txt";
 
-        try(BufferedReader br = new BufferedReader(new FileReader(filePath))){
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = br.readLine()) != null) {
                 allWords.add(line);
             }
 
-        } catch (IOException e){
+        } catch (IOException e) {
             System.err.println("Error reading file: " + e.getMessage());
         }
     }
-    
 
-	
-	public void drawBoard(Graphics g) {
+    public void drawBoard(Graphics g) {
         int rows = 15, cols = 15, cellSize = 40;
 
         // Draw board grid and blank tiles
@@ -108,13 +98,11 @@ public class BoardGame{
 
         drawTilesBoard(g);
         drawPlayerTiles(g);
-
-
     }
 
     public void drawPlayerTiles(Graphics g) {
-        for(int i = 0; i < currentPlayer.size(); i++){
-            currentPlayer.get(i).setLoc(100 + 40 * i);
+        for (int i = 0; i < currentPlayer.size(); i++) {
+            currentPlayer.get(i).setLoc(100 + 40 * i, 700); // Keep tiles at the bottom
             currentPlayer.get(i).drawPTiles(g);
         }
     }
@@ -124,127 +112,133 @@ public class BoardGame{
         g.fillRect(0, 0, 800, 800);
 
         g.setColor(Color.WHITE);
-        g.setFont(new Font("Arial", Font.BOLD, 48));  
-        g.drawString("Scrabble", 270, 200); 
+        g.setFont(new Font("Arial", Font.BOLD, 48));
+        g.drawString("Scrabble", 270, 200);
 
-        g.setFont(new Font("Arial", Font.PLAIN, 24));  
+        g.setFont(new Font("Arial", Font.PLAIN, 24));
         g.drawString("Click the button to start the game", 220, 280);
     }
 
-
-    public int getNumTiles(){
+    public int getNumTiles() {
         return currentPlayer.size();
     }
 
-    public Tile getTile(int index){
-        return currentPlayer.get(index);
+    public Tile getTile(int index) {
+        if (index >= 0 && index < currentPlayer.size()) {
+            return currentPlayer.get(index);
+        }
+        return null; // Handle out of bounds
     }
 
-    public void playTile(int x, int y, Tile tile){
-        if(board[x][y] == null){
+    public void playTile(int x, int y, Tile tile) {
+        if (x >= 0 && x < board.length && y >= 0 && y < board[0].length && board[x][y] == null) {
             board[x][y] = tile;
-            newTiles[0][counter] = x;
-            newTiles[1][counter] = y;
-            counter++;
+            if (counter < newTiles[0].length) {
+                newTiles[0][counter] = x;
+                newTiles[1][counter] = y;
+                counter++;
+            }
+            // Remove the tile from the player's hand.  IMPORTANT
             currentPlayer.remove(tile);
         }
     }
 
-    private void drawTilesBoard(Graphics g){
-        for(int i = 0; i < board.length; i++){
-            for(int f = 0; f < board[i].length; f++){
-                if(board[i][f]!= null){
-                    board[i][f].setLoc(i * 40, f * 40);
+    private void drawTilesBoard(Graphics g) {
+        for (int i = 0; i < board.length; i++) {
+            for (int f = 0; f < board[i].length; f++) {
+                if (board[i][f] != null) {
+                    board[i][f].setLoc(f * 40, i * 40); // Corrected x and y for board
                     board[i][f].drawPTiles(g);
                 }
-                
             }
         }
     }
 
-    public boolean isValidPlay(){
-        if(counter == 0){
+    public boolean isValidPlay() {
+        if (counter == 0) { // No new tiles played
             return false;
         }
 
-        if(!isStraightLine()){
+        if (!isStraightLine()) {
             return false;
         }
 
-        if(!isContinuous()){
+        if (!isContinuous()) {
             return false;
         }
 
+        if (!areWordsValid()) {
+            return false;
+        }
 
-
+        // Add more validation rules here (e.g., connecting to existing tiles)
 
         return true;
     }
 
-    private boolean isStraightLine(){
-        int newTileX = newTiles[0][0];
-        int NewTileY = newTiles[1][0];
-        for(int i = 1; i < newTiles.length; i++){
-            if(!(newTiles[0][i] == newTileX) || (newTiles[1][i] == NewTileY)){
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private boolean isContinuous() {
-        if (counter <= 1) {
+    private boolean isStraightLine() {
+        if (counter <= 1) { // Only one tile played, it's a straight line
             return true;
         }
 
+        // Check if all new tiles are in the same row or same column
+        int firstRow = newTiles[0][0];
+        int firstCol = newTiles[1][0];
+        boolean sameRow = true;
+        boolean sameCol = true;
+
+        for (int i = 1; i < counter; i++) {
+            if (newTiles[0][i] != firstRow) {
+                sameRow = false;
+            }
+            if (newTiles[1][i] != firstCol) {
+                sameCol = false;
+            }
+        }
+
+        return sameRow || sameCol;
+    }
+
+    private boolean isContinuous() {
+        if (counter <= 1) { // Only one tile played, it's continuous
+            return true;
+        }
+
+        // If in the same row
         if (newTiles[0][0] == newTiles[0][1]) {
             int row = newTiles[0][0];
-            int[] cols = new int[counter];
+            ArrayList<Integer> cols = new ArrayList<>();
             for (int i = 0; i < counter; i++) {
-                cols[i] = newTiles[1][i];
+                cols.add(newTiles[1][i]);
             }
-            
-            for (int i = 0; i < counter - 1; i++) {
-                for (int j = 0; j < counter - i - 1; j++) {
-                    if (cols[j] > cols[j + 1]) {
-                        int temp = cols[j];
-                        cols[j] = cols[j + 1];
-                        cols[j + 1] = temp;
-                    }
-                }
-            }
+            sortList(cols); // Sort without Collections.sort
 
-            for (int i = 0; i < counter - 1; i++) {
-                if (cols[i + 1] - cols[i] > 1) {
-                    for (int j = cols[i] + 1; j < cols[i + 1]; j++) {
+            for (int i = 0; i < cols.size() - 1; i++) {
+                if (cols.get(i + 1) - cols.get(i) > 1) {
+                    // Check for empty spaces between the played tiles
+                    for (int j = cols.get(i) + 1; j < cols.get(i + 1); j++) {
                         if (board[row][j] == null) {
-                            return false;
+                            return false; // Gap in the played tiles
                         }
                     }
                 }
             }
-        } else if (newTiles[1][0] == newTiles[1][1]) {
+        }
+        // If in the same column
+        else if (newTiles[1][0] == newTiles[1][1]) {
             int col = newTiles[1][0];
-            int[] rows = new int[counter];
+            ArrayList<Integer> rows = new ArrayList<>();
             for (int i = 0; i < counter; i++) {
-                rows[i] = newTiles[0][i];
+                rows.add(newTiles[0][i]);
             }
-            for (int i = 0; i < counter - 1; i++) {
-                for (int j = 0; j < counter - i - 1; j++) {
-                    if (rows[j] > rows[j + 1]) {
-                        int temp = rows[j];
-                        rows[j] = rows[j + 1];
-                        rows[j + 1] = temp;
-                    }
-                }
-            }
+            sortList(rows); // Sort without Collections.sort
 
-            for (int i = 0; i < counter - 1; i++) {
-                if (rows[i + 1] - rows[i] > 1) {
-                    for (int j = rows[i] + 1; j < rows[i + 1]; j++) {
+            for (int i = 0; i < rows.size() - 1; i++) {
+                if (rows.get(i + 1) - rows.get(i) > 1) {
+                    // Check for empty spaces between the played tiles
+                    for (int j = rows.get(i) + 1; j < rows.get(i + 1); j++) {
                         if (board[j][col] == null) {
-                            return false;
+                            return false; // Gap in the played tiles
                         }
                     }
                 }
@@ -254,11 +248,192 @@ public class BoardGame{
         return true;
     }
 
-    public void resetNewTileCounter() {
-        counter = 0;
-        newTiles = new int[2][7];
+    private boolean areWordsValid() {
+        String[] words = getFormedWords();
+        if (words == null) {
+            return false;
+        }
+        for (String word : words) {
+            if (!isValidWord(word)) {
+                return false;
+            }
+        }
+        return true;
     }
 
-    
-}
+    private String[] getFormedWords() {
+        String[] words = new String[10]; // Assume a max of 10 words formed
+        int wordCount = 0;
 
+        if (counter == 0)
+            return new String[0];
+
+        int firstRow = newTiles[0][0];
+        int firstCol = newTiles[1][0];
+        boolean horizontal = (counter > 1) ? (newTiles[0][0] == newTiles[0][1]) : false;
+        boolean vertical = (counter > 1) ? (newTiles[1][0] == newTiles[1][1]) : false;
+
+        if (counter == 1) {
+            horizontal = true;
+            vertical = true;
+        }
+
+        // Check for horizontal word(s)
+        if (horizontal) {
+            int startCol = firstCol;
+            int endCol = firstCol;
+            //find the beginning of the word
+            while (startCol > 0 && board[firstRow][startCol - 1] != null) {
+                startCol--;
+            }
+            //find the end of the word
+            while (endCol < BOARD_SIZE - 1 && board[firstRow][endCol + 1] != null) {
+                endCol++;
+            }
+            String word = "";
+            for (int c = startCol; c <= endCol; c++) {
+                word += board[firstRow][c].getLetter();
+            }
+            if (word.length() > 1) {
+                words[wordCount++] = word;
+            }
+
+            //check vertical words
+            for (int col = firstCol; col < counter + firstCol; col++) {
+                int startRow = firstRow;
+                int endRow = firstRow;
+
+                while (startRow > 0 && board[startRow - 1][col] != null) {
+                    startRow--;
+                }
+                while (endRow < BOARD_SIZE - 1 && board[endRow + 1][col] != null) {
+                    endRow++;
+                }
+                String wordV = "";
+                if (endRow != startRow) {
+                    for (int r = startRow; r <= endRow; r++) {
+                        wordV += board[r][col].getLetter();
+                    }
+                    if (wordV.length() > 1) {
+                        words[wordCount++] = wordV;
+                    }
+                }
+            }
+
+        }
+
+        // Check for vertical word(s)
+        if (vertical) {
+            int startRow = firstRow;
+            int endRow = firstRow;
+
+            while (startRow > 0 && board[startRow - 1][firstCol] != null) {
+                startRow--;
+            }
+            while (endRow < BOARD_SIZE - 1 && board[endRow + 1][firstCol] != null) {
+                endRow++;
+            }
+            String word = "";
+            for (int r = startRow; r <= endRow; r++) {
+                word += board[r][firstCol].getLetter();
+            }
+            if (word.length() > 1) {
+                words[wordCount++] = word;
+            }
+
+            //check horizontal words
+            for (int row = firstRow; row < counter + firstRow; row++) {
+                int startCol = firstCol;
+                int endCol = firstCol;
+
+                while (startCol > 0 && board[row][startCol - 1] != null) {
+                    startCol--;
+                }
+                while (endCol < BOARD_SIZE - 1 && board[row][endCol + 1] != null) {
+                    endCol++;
+                }
+                String wordH = "";
+                if (endCol != startCol) {
+                    for (int c = startCol; c <= endCol; c++) {
+                        wordH += board[row][c].getLetter();
+                    }
+                    if (wordH.length() > 1) {
+                        words[wordCount++] = wordH;
+                    }
+                }
+            }
+        }
+
+        if (wordCount > 0) {
+            String[] result = new String[wordCount];
+            for (int i = 0; i < wordCount; i++) {
+                result[i] = words[i];
+            }
+            return result;
+        } else {
+            return new String[0];
+        }
+
+    }
+
+    private boolean isValidWord(String word) {
+        if (word == null || word.length() < 2)
+            return false;
+        for (int i = 0; i < allWords.size(); i++) {
+            if (allWords.get(i).equals(word)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Method to reset the counter for new tiles after a move
+    public void resetNewTileCounter() {
+        counter = 0;
+        newTiles = new int[2][7]; // Reset the array as well
+    }
+
+    // Simple bubble sort for ArrayList<Integer>
+    private void sortList(ArrayList<Integer> list) {
+        for (int i = 0; i < list.size() - 1; i++) {
+            for (int j = 0; j < list.size() - i - 1; j++) {
+                if (list.get(j) > list.get(j + 1)) {
+                    int temp = list.get(j);
+                    list.set(j, list.get(j + 1));
+                    list.set(j + 1, temp);
+                }
+            }
+        }
+    }
+
+    public void endTurn() {
+        // Refill the current player's hand with new tiles from the bank
+        replenishTiles(currentPlayer);
+        // Switch to the next player (basic alternating turns)
+        switchPlayer();
+    }
+
+    private void replenishTiles(ArrayList<Tile> playerTiles) {
+        Random rand = new Random();
+        while (playerTiles.size() < 7 && bank.size() > 0) {
+            int index = rand.nextInt(bank.size());
+            Tile drawn = bank.remove(index);
+            drawn.moveTo(100 + playerTiles.size() * 40, 700);
+            playerTiles.add(drawn);
+        }
+    }
+
+    private void switchPlayer() {
+        if (currentPlayer == p1Tiles) {
+            currentPlayer = null; // For now, set to null.  In a real game, you'd have a p2Tiles.
+            oldTiles = p1Tiles;
+        } else {
+            currentPlayer = p1Tiles;
+            oldTiles = null;
+        }
+    }
+
+    public void givePlayerNewTiles() {
+        replenishTiles(currentPlayer);
+    }
+}

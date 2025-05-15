@@ -1,66 +1,51 @@
 import game.*;
 
+import java.util.*;
+import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 
-//import org.w3c.dom.events.MouseEvent;
+public class Screen extends JPanel implements KeyListener, MouseListener, ActionListener {
 
-import java.awt.*;
+    // instance variables
+    BoardGame scrabble;
+    Tile selectedTile;
+    private boolean gameStarted = false;
+    private JButton startButton;
+    private JButton endTurnButton; // Added end turn button
 
-// import KeyListener classes
-import java.awt.event.*;
+    public Screen() {
+        scrabble = new BoardGame();
+        setFocusable(true);
+        setLayout(null);
+        // add Key listener
+        addKeyListener(this);
+        addMouseListener(this);
 
-
-//If you implement buttons, import those classes, too.
-
-
-
-
-// If you use mouse listening, add that interface, too.
-public class Screen extends JPanel implements KeyListener, MouseListener{
-
-
-	// instance variables
-	BoardGame scrabble;
-	Tile selectedTile;
-	private boolean gameStarted = false;
-	private JButton startButton;
-
-
-	public Screen(){
-
-		scrabble = new BoardGame();
-        setFocusable(true); 
-		setLayout(null);
-		// add Key listener
-		addKeyListener(this);
-		addMouseListener(this);
-
-		startButton = new JButton("Start Game");
+        startButton = new JButton("Start Game");
         startButton.setBounds(300, 350, 200, 60);
         startButton.setFont(new Font("Arial", Font.BOLD, 24));
         add(startButton);
+		startButton.addActionListener(this);
+		startButton.setVisible(true);
+		startButton.setEnabled(true);
 
-        // Action listener to handle button clicks
-        startButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                gameStarted = true;
-                remove(startButton); // Hide the button
-                repaint();
-                requestFocusInWindow(); // Ensure key inputs work
-            }
-        });
-	}
+        endTurnButton = new JButton("End Turn"); 
+        endTurnButton.setBounds(700, 700, 100, 100); 
+        endTurnButton.setFont(new Font("Arial", Font.BOLD, 24));
+        endTurnButton.setVisible(false); 
+        add(endTurnButton);
+        
+    }
 
+    @Override
+    public Dimension getPreferredSize() {
+        //Sets the size of the panel
+        return new Dimension(800, 800);
+    }
 
-	@Override
-	public Dimension getPreferredSize() {
-		//Sets the size of the panel
-        	return new Dimension(800,800);
-	}
-	
-	@Override
-	 public void paintComponent(Graphics g) {
+    @Override
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
         if (!gameStarted) {
@@ -71,63 +56,84 @@ public class Screen extends JPanel implements KeyListener, MouseListener{
         }
     }
 
-
-	// animate a scene
-	public void animate() {
-		while(true){
+    // animate a scene
+    public void animate() {
+        while (true) {
             //pause for .01 second
             try {
                 Thread.sleep(10);    // 10 milliseconds
-            } catch(InterruptedException ex) {
+            } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
-            
-
 
             repaint();
         }
-	}
+    }
 
-
-	// interpret key clicks
-	public void keyPressed(KeyEvent e){
-		
-		repaint();
-		
-	}
-
-
-	// You must have method signatures for all methods that are
-	// part of an interface.
-	public void keyReleased(KeyEvent e){}
-	public void keyTyped(KeyEvent e){}
-	public void mouseClicked(MouseEvent e){
-		int x = e.getX();
-		int y = e.getY();
-		int boardX = x / 40;
-		int boardY = y / 40;
-		
-		if(y >= 700 && y <= 740 && x >= 100 && x <= 100 + 40 * scrabble.getNumTiles()){
-			int tileX = (x - 100)/40;
-			selectedTile = scrabble.getTile(tileX);
+	public void actionPerformed(ActionEvent e){
+		if(e.getSource() == startButton){
+			gameStarted = true;
+			startButton.setVisible(false);
+			startButton.setEnabled(false);
+			endTurnButton.setVisible(true);
+			endTurnButton.setEnabled(true);
+		} else if (e.getSource() == endTurnButton){
+			if (scrabble.isValidPlay()) {
+				scrabble.endTurn();
+				scrabble.givePlayerNewTiles(); //give player new tiles
+				scrabble.resetNewTileCounter();
+				selectedTile = null; // Clear any selected tile
+				repaint();
+				requestFocusInWindow();
+			}
 		}
-		
-
-		System.out.println(selectedTile);
-		if(x <= 600 && y <= 600){
-			scrabble.playTile(boardX, boardY, selectedTile);
-			selectedTile = null;
-		}
-
-		repaint();
-
-
 	}
-	public void mouseEntered(MouseEvent e){}
-	public void mouseExited(MouseEvent e){}
-	public void mousePressed(MouseEvent e){}
-	public void mouseReleased(MouseEvent e){}
 
+    // interpret key clicks
+    public void keyPressed(KeyEvent e) {
 
+        repaint();
 
+    }
+
+    // You must have method signatures for all methods that are
+    // part of an interface.
+    public void keyReleased(KeyEvent e) {
+    }
+
+    public void keyTyped(KeyEvent e) {
+    }
+
+    public void mouseClicked(MouseEvent e) {
+        int x = e.getX();
+        int y = e.getY();
+        int boardX = x / 40;
+        int boardY = y / 40;
+
+        if (y >= 700 && y <= 740 && x >= 100 && x <= 100 + 40 * scrabble.getNumTiles()) {
+            int tileX = (x - 100) / 40;
+            selectedTile = scrabble.getTile(tileX);
+        }
+
+        System.out.println("Selected Tile: " + selectedTile + " at board position: " + boardX + ", " + boardY); // Debugging
+        if (x <= 600 && y <= 600 && selectedTile != null) {
+            scrabble.playTile(boardY, boardX, selectedTile);
+            selectedTile.setLoc(boardX * 40, boardY * 40);
+            selectedTile = null;
+        }
+
+        repaint();
+    }
+
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    public void mouseExited(MouseEvent e) {
+    }
+
+    public void mousePressed(MouseEvent e) {
+    }
+
+    public void mouseReleased(MouseEvent e) {
+    }
 }
