@@ -103,14 +103,18 @@ public class BoardGame{
         }
     }
 
-    public void drawStartScreen(Graphics g) {//method for drawing the start screen
-            g.setColor(Color.BLACK);
-            g.fillRect(0, 0, 800, 800);
+    public void drawStartScreen(Graphics g) {
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, 800, 800);
 
-            g.setColor(Color.WHITE);
-            g.setFont(new Font("Arial", Font.BOLD, 36));  
-            g.drawString("Scrabble", 320, 80);          
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Arial", Font.BOLD, 48));  
+        g.drawString("Scrabble", 270, 200); 
+
+        g.setFont(new Font("Arial", Font.PLAIN, 24));  
+        g.drawString("Click the button to start the game", 220, 280);
     }
+
 
     public int getNumTiles(){
         return currentPlayer.size();

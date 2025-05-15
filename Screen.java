@@ -22,6 +22,8 @@ public class Screen extends JPanel implements KeyListener, MouseListener{
 	// instance variables
 	BoardGame scrabble;
 	Tile selectedTile;
+	private boolean gameStarted = false;
+	private JButton startButton;
 
 
 	public Screen(){
@@ -32,6 +34,22 @@ public class Screen extends JPanel implements KeyListener, MouseListener{
 		// add Key listener
 		addKeyListener(this);
 		addMouseListener(this);
+
+		startButton = new JButton("Start Game");
+        startButton.setBounds(300, 350, 200, 60);
+        startButton.setFont(new Font("Arial", Font.BOLD, 24));
+        add(startButton);
+
+        // Action listener to handle button clicks
+        startButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                gameStarted = true;
+                remove(startButton); // Hide the button
+                repaint();
+                requestFocusInWindow(); // Ensure key inputs work
+            }
+        });
 	}
 
 
@@ -42,12 +60,16 @@ public class Screen extends JPanel implements KeyListener, MouseListener{
 	}
 	
 	@Override
-	public void paintComponent(Graphics g) {
+	 public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-		scrabble.drawBoard(g);
-
-	} 
+        if (!gameStarted) {
+            scrabble.drawStartScreen(g);
+        } else {
+            scrabble.drawBoard(g);
+            scrabble.drawPlayerTiles(g);
+        }
+    }
 
 
 	// animate a scene
