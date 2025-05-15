@@ -19,19 +19,23 @@ public class BoardGame {
     private int[][] newTiles;
     private static int counter;
     private static final int BOARD_SIZE = 15;
-
+    private Tile[][] specialTiles;
     public BoardGame() {
         p1Tiles = new ArrayList<Tile>();
         bank = new ArrayList<Tile>();
         allWords = new ArrayList<String>();
+        
         currentPlayer = p1Tiles;
         oldTiles = currentPlayer;
         board = new Tile[BOARD_SIZE][BOARD_SIZE];
         newTiles = new int[2][7];
+        specialTiles = new Tile[15][15];
+
 
         readBank();
         readWords();
         giveInitialTiles();
+        initializeSpecialTiles();
     }
 
     public void giveInitialTiles() {
@@ -43,6 +47,80 @@ public class BoardGame {
             p1Tiles.add(drawn);
         }
     }
+    private void initializeSpecialTiles() {
+       int cellSize = 40;
+
+
+       // Triple Word Score Tiles (Red)
+       // Corners and middle edges
+       specialTiles[0][0] = new TripleWordTile(0, 0, cellSize, cellSize);
+       specialTiles[0][7] = new TripleWordTile(0, 7 * cellSize, cellSize, cellSize);
+       specialTiles[0][14] = new TripleWordTile(0, 14 * cellSize, cellSize, cellSize);
+       specialTiles[7][0] = new TripleWordTile(7 * cellSize, 0, cellSize, cellSize);
+       specialTiles[7][14] = new TripleWordTile(7 * cellSize, 14 * cellSize, cellSize, cellSize);
+       specialTiles[14][0] = new TripleWordTile(14 * cellSize, 0, cellSize, cellSize);
+       specialTiles[14][7] = new TripleWordTile(14 * cellSize, 7 * cellSize, cellSize, cellSize);
+       specialTiles[14][14] = new TripleWordTile(14 * cellSize, 14 * cellSize, cellSize, cellSize);
+
+
+       // Double Word Score Tiles (Pink/Light Red)
+       // The diagonal pattern
+       for (int i = 1; i < 5; i++) {
+           specialTiles[i][i] = new DoubleWordTile(i * cellSize, i * cellSize, cellSize, cellSize);
+           specialTiles[i][14 - i] = new DoubleWordTile(i * cellSize, (14 - i) * cellSize, cellSize, cellSize);
+           specialTiles[14 - i][i] = new DoubleWordTile((14 - i) * cellSize, i * cellSize, cellSize, cellSize);
+           specialTiles[14 - i][14 - i] = new DoubleWordTile((14 - i) * cellSize, (14 - i) * cellSize, cellSize, cellSize);
+       }
+
+
+       // Also add the specific double word tile in the middle of the board
+       specialTiles[7][7] = new DoubleWordTile(7 * cellSize, 7 * cellSize, cellSize, cellSize);
+
+
+       // Triple Letter Score Tiles (Blue)
+       // Based on the board image
+       specialTiles[1][5] = new TripleLetterTile(5 * cellSize, 1 * cellSize, cellSize, cellSize);
+       specialTiles[1][9] = new TripleLetterTile(9 * cellSize, 1 * cellSize, cellSize, cellSize);
+       specialTiles[5][1] = new TripleLetterTile(1 * cellSize, 5 * cellSize, cellSize, cellSize);
+       specialTiles[5][5] = new TripleLetterTile(5 * cellSize, 5 * cellSize, cellSize, cellSize);
+       specialTiles[5][9] = new TripleLetterTile(9 * cellSize, 5 * cellSize, cellSize, cellSize);
+       specialTiles[5][13] = new TripleLetterTile(13 * cellSize, 5 * cellSize, cellSize, cellSize);
+       specialTiles[9][1] = new TripleLetterTile(1 * cellSize, 9 * cellSize, cellSize, cellSize);
+       specialTiles[9][5] = new TripleLetterTile(5 * cellSize, 9 * cellSize, cellSize, cellSize);
+       specialTiles[9][9] = new TripleLetterTile(9 * cellSize, 9 * cellSize, cellSize, cellSize);
+       specialTiles[9][13] = new TripleLetterTile(13 * cellSize, 9 * cellSize, cellSize, cellSize);
+       specialTiles[13][5] = new TripleLetterTile(5 * cellSize, 13 * cellSize, cellSize, cellSize);
+       specialTiles[13][9] = new TripleLetterTile(9 * cellSize, 13 * cellSize, cellSize, cellSize);
+
+
+       // Double Letter Score Tiles (Light Blue)
+       // Based on the board image
+       specialTiles[0][3] = new DoubleLetterTile(3 * cellSize, 0, cellSize, cellSize);
+       specialTiles[0][11] = new DoubleLetterTile(11 * cellSize, 0, cellSize, cellSize);
+       specialTiles[2][6] = new DoubleLetterTile(6 * cellSize, 2 * cellSize, cellSize, cellSize);
+       specialTiles[2][8] = new DoubleLetterTile(8 * cellSize, 2 * cellSize, cellSize, cellSize);
+       specialTiles[3][0] = new DoubleLetterTile(0, 3 * cellSize, cellSize, cellSize);
+       specialTiles[3][7] = new DoubleLetterTile(7 * cellSize, 3 * cellSize, cellSize, cellSize);
+       specialTiles[3][14] = new DoubleLetterTile(14 * cellSize, 3 * cellSize, cellSize, cellSize);
+       specialTiles[6][2] = new DoubleLetterTile(2 * cellSize, 6 * cellSize, cellSize, cellSize);
+       specialTiles[6][6] = new DoubleLetterTile(6 * cellSize, 6 * cellSize, cellSize, cellSize);
+       specialTiles[6][8] = new DoubleLetterTile(8 * cellSize, 6 * cellSize, cellSize, cellSize);
+       specialTiles[6][12] = new DoubleLetterTile(12 * cellSize, 6 * cellSize, cellSize, cellSize);
+       specialTiles[7][3] = new DoubleLetterTile(3 * cellSize, 7 * cellSize, cellSize, cellSize);
+       specialTiles[7][11] = new DoubleLetterTile(11 * cellSize, 7 * cellSize, cellSize, cellSize);
+       specialTiles[8][2] = new DoubleLetterTile(2 * cellSize, 8 * cellSize, cellSize, cellSize);
+       specialTiles[8][6] = new DoubleLetterTile(6 * cellSize, 8 * cellSize, cellSize, cellSize);
+       specialTiles[8][8] = new DoubleLetterTile(8 * cellSize, 8 * cellSize, cellSize, cellSize);
+       specialTiles[8][12] = new DoubleLetterTile(12 * cellSize, 8 * cellSize, cellSize, cellSize);
+       specialTiles[11][0] = new DoubleLetterTile(0, 11 * cellSize, cellSize, cellSize);
+       specialTiles[11][7] = new DoubleLetterTile(7 * cellSize, 11 * cellSize, cellSize, cellSize);
+       specialTiles[11][14] = new DoubleLetterTile(14 * cellSize, 11 * cellSize, cellSize, cellSize);
+       specialTiles[12][6] = new DoubleLetterTile(6 * cellSize, 12 * cellSize, cellSize, cellSize);
+       specialTiles[12][8] = new DoubleLetterTile(8 * cellSize, 12 * cellSize, cellSize, cellSize);
+       specialTiles[14][3] = new DoubleLetterTile(3 * cellSize, 14 * cellSize, cellSize, cellSize);
+       specialTiles[14][11] = new DoubleLetterTile(11 * cellSize, 14 * cellSize, cellSize, cellSize);
+   }
+
 
     // Play sound. You can find free .wav files at wavsource.com.
     public void playSound() {
@@ -86,13 +164,25 @@ public class BoardGame {
     public void drawBoard(Graphics g) {
         int rows = 15, cols = 15, cellSize = 40;
 
-        // Draw board grid and blank tiles
+        // Draw board base color (green)
+        g.setColor(new Color(0, 110, 0)); // Dark green background
+        g.fillRect(0, 0, cols * cellSize, rows * cellSize);
+
+        // Draw grid lines
+        g.setColor(Color.WHITE);
+        for (int i = 0; i <= rows; i++) {
+            g.drawLine(0, i * cellSize, cols * cellSize, i * cellSize);
+        }
+        for (int i = 0; i <= cols; i++) {
+            g.drawLine(i * cellSize, 0, i * cellSize, rows * cellSize);
+        }
+
+        // Draw special tiles
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
-                int x = col * cellSize;
-                int y = row * cellSize;
-                Tile blank = new Tile("", 0, x, y, cellSize, cellSize);
-                blank.draw(g);
+                if (specialTiles[row][col] != null) {
+                    specialTiles[row][col].draw(g);
+                }
             }
         }
 
