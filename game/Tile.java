@@ -18,6 +18,9 @@ public class Tile extends Sprite {
         g.setColor(Color.BLACK);
         g.drawRect(x, y, width, height);
         g.drawString(letter, x + width / 2 - 5, y + height / 2 + 5);
+        // Add value display in the bottom right corner
+        g.setFont(new Font("Arial", Font.PLAIN, 8));
+        g.drawString(String.valueOf(value), x + width - 10, y + height - 2);
     }
 
     public void drawPTiles(Graphics g) {
@@ -25,9 +28,12 @@ public class Tile extends Sprite {
         g.fillRect(x, y, width, height);
         g.setColor(Color.BLACK);
         g.drawRect(x, y, width, height);
+        // Draw the letter
         g.setFont(new Font("Arial", Font.BOLD, 18));  
-        g.drawString(letter, x + width / 2 - 5, y + height / 2 + 6); 
-
+        g.drawString(letter, x + width / 2 - 5, y + height / 2 + 6);
+        // Draw the value in small text in bottom right
+        g.setFont(new Font("Arial", Font.PLAIN, 8));
+        g.drawString(String.valueOf(value), x + width - 10, y + height - 2);
     }
 
     public void setLoc(int x, int y){
@@ -49,5 +55,9 @@ public class Tile extends Sprite {
 
     public String getLetter(){
         return letter;
+    }
+    
+    public int getValue() {
+        return value;
     }
 }
