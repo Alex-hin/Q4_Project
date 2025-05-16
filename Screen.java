@@ -35,6 +35,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
         endTurnButton.setFont(new Font("Arial", Font.BOLD, 24));
         endTurnButton.setVisible(false); 
         add(endTurnButton);
+        endTurnButton.addActionListener(this);
         
     }
 
