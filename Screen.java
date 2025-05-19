@@ -11,10 +11,12 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
     BoardGame scrabble;
     Tile selectedTile;
     private boolean gameStarted = false;
+    private boolean gameEnded = false;
     private JButton startButton;
     private JButton endTurnButton;
     private JButton exchangeTilesButton; // Button to exchange tiles
     private JButton passButton; // Button to pass turn
+    private JButton restartButton; //Button to restart the game when ended
     private JLabel statusLabel; // Status messages for players
     
     private int passCounter = 0; // Count consecutive passes
