@@ -24,7 +24,7 @@ public class BoardGame {
     private Tile[][] specialTiles;
     private boolean firstPlay; // Flag to check if it's the first play
     
-    @SuppressWarnings("unchecked")
+    //@SuppressWarnings("unchecked")
     public BoardGame() {
         // Initialize player tiles and scores for 4 players
         playerTiles = new ArrayList[4];
@@ -218,9 +218,7 @@ public class BoardGame {
             }
         }
     }
-    
-    // Keep your existing initializeSpecialTiles() method
-    
+        
     // Modified to display current player's tiles
     public void drawPlayerTiles(Graphics g) {
         for (int i = 0; i < getCurrentPlayerTiles().size(); i++) {

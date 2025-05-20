@@ -192,10 +192,10 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
         passButton.setEnabled(false);
         
         // Show game over message with winner
-        JOptionPane.showMessageDialog(this,
+        /*JOptionPane.showMessageDialog(this,
                 "Game Over!\nPlayer " + (winner + 1) + " wins with " + winnerScore + " points!",
                 "Game Over",
-                JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.INFORMATION_MESSAGE);*/
     }
 
     // Keep your existing mouse and key listener methods
