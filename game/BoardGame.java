@@ -1,5 +1,3 @@
-// 1. First, modify your BoardGame class to support 4 players
-
 package game;
 
 import java.util.*;
@@ -268,6 +266,7 @@ public class BoardGame {
     
     // Modified to check if first play is in the center
     public boolean isValidPlay() {
+        
         if (counter == 0) { // No new tiles played
             return false;
         }
@@ -322,13 +321,27 @@ public class BoardGame {
     }
 
     private boolean isValidWord(String word) {
-        if (word == null || word.length() < 2)
+        if (word == null || word.length() < 2){
             return false;
-        for (int i = 0; i < allWords.size(); i++) {
-            if (allWords.get(i).equals(word)) {
-                return true;
+        }
+
+        // Binary search
+        int low = 0;
+        int high = allWords.size() - 1;
+
+        while (low <= high) {
+            int mid = low + (high - low) / 2; // To prevent potential overflow
+            int comparisonResult = allWords.get(mid).compareTo(word);
+
+            if (comparisonResult == 0) {
+                return true; // Target found at index mid
+            } else if (comparisonResult < 0) {
+                low = mid + 1; // Target is in the right half
+            } else {
+                high = mid - 1; // Target is in the left half
             }
         }
+
         return false;
     }
 
@@ -336,9 +349,9 @@ public class BoardGame {
         String[] words = new String[10]; // Assume a max of 10 words formed
         int wordCount = 0;
 
-        if (counter == 0)
+        if (counter == 0){
             return new String[0];
-
+        }
         int firstRow = newTiles[0][0];
         int firstCol = newTiles[1][0];
         boolean horizontal = (counter > 1) ? (newTiles[0][0] == newTiles[0][1]) : false;
@@ -552,8 +565,6 @@ public class BoardGame {
         }
         return false;
     }
-    
-    // Keep your existing isStraightLine() and isContinuous() methods
     
     // SCORING SYSTEM
     // Calculate score for the current play
