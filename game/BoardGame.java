@@ -266,9 +266,9 @@ public class BoardGame {
     
     // Modified to check if first play is in the center
     public boolean isValidPlay() {
-        
+        boolean bool = true;
         if (counter == 0) { // No new tiles played
-            return false;
+            bool = false;
         }
         
         // First play must include the center square
@@ -281,7 +281,7 @@ public class BoardGame {
                 }
             }
             if (!centerUsed) {
-                return false;
+                bool = false;
             }
         } else {
             // For subsequent plays, check if new tiles connect to existing tiles
@@ -300,24 +300,35 @@ public class BoardGame {
                 }
             }
             if (!connected) {
-                return false;
+                bool = false;
             }
         }
 
         if (!isStraightLine()) {
-            return false;
+            bool = false;
         }
 
         if (!isContinuous()) {
-            return false;
+            bool = false;
         }
 
         // Check if all words formed are valid
         if (!areWordsValid()) {
-            return false;
+            bool = false;
         }
 
-        return true;
+        if(!bool){
+            for(int i = 0; i < 7; i++){
+                if(!(newTiles[0][i] == 0 && newTiles[1][i] == 0 && board[0][0] == null)){
+                    playerTiles[currentPlayerIndex].add(board[newTiles[0][i]][newTiles[1][i]]);
+                    board[newTiles[0][i]][newTiles[1][i]] = null;
+                }
+            }
+        }
+
+
+
+        return bool;
     }
 
     private boolean isValidWord(String word) {
