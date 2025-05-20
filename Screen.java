@@ -262,6 +262,11 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
     }
     
     public void mouseClicked(MouseEvent e) {
+    }
+
+
+    
+    public void mousePressed(MouseEvent e) {
         if (!gameStarted || gameEnded) {
             return; // Don't process clicks if game not started or already ended
         }
@@ -292,11 +297,6 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
 
 
         repaint();
-    }
-
-
-    
-    public void mousePressed(MouseEvent e) {
     }
     
     public void mouseReleased(MouseEvent e) {

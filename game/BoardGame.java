@@ -408,7 +408,9 @@ public class BoardGame {
                 String wordV = "";
                 if (endRow != startRow) {
                     for (int r = startRow; r <= endRow; r++) {
-                        wordV += board[r][col].getLetter();
+                        if(board[r][col] != null){
+                            wordV += board[r][col].getLetter();
+                        }
                     }
                     if (wordV.length() > 1) {
                         words[wordCount++] = wordV;
@@ -451,7 +453,9 @@ public class BoardGame {
                 String wordH = "";
                 if (endCol != startCol) {
                     for (int c = startCol; c <= endCol; c++) {
-                        wordH += board[row][c].getLetter();
+                        if(board[row][c] != null){
+                            wordH += board[row][c].getLetter(); 
+                        } 
                     }
                     if (wordH.length() > 1) {
                         words[wordCount++] = wordH;
