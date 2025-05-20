@@ -236,6 +236,26 @@ public class BoardGame {
             g.drawString(scoreText, 615, 450 + (i * 25));
         }
     }
+
+    public void playValidSound(){
+		try {
+            Clip clip = AudioSystem.getClip();
+            clip.open(AudioSystem.getAudioInputStream(new File("game/valid.mp3").getAbsoluteFile()));
+            clip.start();
+        } catch (Exception exc) {
+            exc.printStackTrace(System.out);
+        }
+	}
+
+    public void playInvalidSound(){
+		try {
+            Clip clip = AudioSystem.getClip();
+            clip.open(AudioSystem.getAudioInputStream(new File("game/invalid.mp3").getAbsoluteFile()));
+            clip.start();
+        } catch (Exception exc) {
+            exc.printStackTrace(System.out);
+        }
+	}
     
     public ArrayList<Tile> getCurrentPlayerTiles() {
         return playerTiles[currentPlayerIndex];
