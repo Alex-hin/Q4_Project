@@ -19,7 +19,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
     private JButton passButton; // Button to pass turn
     private JButton restartButton; // Button to restart the game when ended
     private JLabel statusLabel; // Status messages for players
-    
+    private Confetti confetti;
     private int passCounter = 0; // Count consecutive passes
     
     public Screen() {
@@ -29,7 +29,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
         // add Key listener
         addKeyListener(this);
         addMouseListener(this);
-        
+        confetti = new Confetti(800, 800);
         // Start Game Button
         startButton = new JButton("Start Game");
         startButton.setBounds(300, 350, 200, 60);
@@ -81,6 +81,9 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
     public void animate() {
         while (true) {
             // update the components
+            if (confetti != null) {
+                confetti.update();
+            }
             // draw the screen
             repaint();
             // sleep for 30 milliseconds
@@ -106,13 +109,18 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
     private void drawEndScreen(Graphics g) {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, 800, 800);
+        
+        // Draw confetti
+        if (confetti != null) {
+            confetti.draw(g);
+        }
+        
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.BOLD, 48));
         g.drawString("Game Over!", 250, 200);
         g.setFont(new Font("Arial", Font.PLAIN, 36));
         g.drawString("Player " + (winner + 1) + " wins!", 280, 280);
         g.drawString("Score: " + winnerScore, 320, 340);
-        
         // Also display all player scores
         g.setFont(new Font("Arial", Font.PLAIN, 24));
         for (int i = 0; i < 4; i++) {
@@ -120,7 +128,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
             g.drawString(scoreText, 300, 400 + (i * 30));
         }
     }
-    
+        
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == startButton) {
             startGame();
@@ -196,6 +204,9 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
         winner = scrabble.getWinner();
         winnerScore = scrabble.getPlayerScore(winner);
         
+        // Start confetti animation
+        confetti.start();
+        
         // Hide game buttons
         endTurnButton.setVisible(false);
         exchangeTilesButton.setVisible(false);
@@ -212,6 +223,9 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
         selectedTile = null;
         gameEnded = false;
         passCounter = 0;
+        
+        // Reset confetti
+        confetti = new Confetti(800, 800);
         
         // Hide restart button
         restartButton.setVisible(false);
