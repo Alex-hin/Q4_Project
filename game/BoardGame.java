@@ -2,10 +2,11 @@ package game;
 
 import java.util.*;
 import java.awt.*;
+import java.io.*;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import java.io.*;
+
 
 public class BoardGame {
 
@@ -22,7 +23,7 @@ public class BoardGame {
     private Tile[][] specialTiles;
     private boolean firstPlay; // Flag to check if it's the first play
     
-    //@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     public BoardGame() {
         // Initialize player tiles and scores for 4 players
         playerTiles = new ArrayList[4];
