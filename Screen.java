@@ -147,7 +147,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
         g.setFont(new Font("Arial", Font.BOLD, 24));
         g.drawString("Game Overview:", 50, 130);
         
-        g.setFont(new Font("Arial", Font.PLAIN, 18));
+        g.setFont(new Font("Arial", Font.PLAIN, 15));
         String[] instructions = {
             "• It's a 15x15 board with standard Scrabble rules. The game includes a word list of all possible words.",
             "• There are 4 players who take turns in a circle, each forming words on the board.",
@@ -207,7 +207,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
         g.setFont(new Font("Arial", Font.BOLD, 24));
         g.drawString("How to Play:", 50, 520);
         
-        g.setFont(new Font("Arial", Font.PLAIN, 18));
+        g.setFont(new Font("Arial", Font.PLAIN, 15));
         String[] gameplay = {
             "1. Select a tile from your rack at the bottom of the screen.",
             "2. Click on the board to place the selected tile.",
