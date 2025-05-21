@@ -25,7 +25,7 @@ public class Confetti {
         speed = new int[MAX_CONFETTI];
         size = new int[MAX_CONFETTI];
         colors = new Color[MAX_CONFETTI];
-        rotation = new int[MAX_CONFETTI];
+        rotation = new int[MAX_CONFETTI]; 
         rotationSpeed = new int[MAX_CONFETTI];
     }
     
