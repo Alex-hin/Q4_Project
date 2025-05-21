@@ -366,7 +366,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
     private void endTurn() {
         if (scrabble.isValidPlay()) {
             int score = scrabble.calculateScore();
-            //scrabble.playValidSound();
+            scrabble.playValidSound();
             scrabble.endTurn();
             passCounter = 0; // Reset pass counter as a valid move was made
             
@@ -377,7 +377,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
                 updateStatusLabel("Player " + (scrabble.getCurrentPlayerIndex() + 1) + "'s turn");
             }
         } else {
-            //scrabble.playInvalidSound();
+            scrabble.playInvalidSound();
             updateStatusLabel("Invalid play! Try again.");
         }
     }

@@ -240,7 +240,7 @@ public class BoardGame {
     public void playValidSound(){
 		try {
             Clip clip = AudioSystem.getClip();
-            clip.open(AudioSystem.getAudioInputStream(new File("game/valid.mp3").getAbsoluteFile()));
+            clip.open(AudioSystem.getAudioInputStream(new File("game/valid.wav").getAbsoluteFile()));
             clip.start();
         } catch (Exception exc) {
             exc.printStackTrace(System.out);
@@ -250,7 +250,7 @@ public class BoardGame {
     public void playInvalidSound(){
 		try {
             Clip clip = AudioSystem.getClip();
-            clip.open(AudioSystem.getAudioInputStream(new File("game/invalid.mp3").getAbsoluteFile()));
+            clip.open(AudioSystem.getAudioInputStream(new File("game/invalid.wav").getAbsoluteFile()));
             clip.start();
         } catch (Exception exc) {
             exc.printStackTrace(System.out);
