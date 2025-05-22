@@ -121,6 +121,8 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
     }
     
     public void paintComponent(Graphics g) {
+        requestFocusInWindow();
+
         super.paintComponent(g);
         if (showingHowToPlay) {
             drawHowToPlayScreen(g);
@@ -321,6 +323,8 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
     }
         
     public void actionPerformed(ActionEvent e) {
+        requestFocusInWindow();
+
         if (e.getSource() == startButton) {
             startGame();
         } else if (e.getSource() == howToPlayButton) {
@@ -336,6 +340,8 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
         } else if (e.getSource() == restartButton) {
             restartGame();
         }
+
+        setFocusable(true);
     }
     
     private void showHowToPlay() {
@@ -456,6 +462,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
     public void keyPressed(KeyEvent e) {
         //change key code to 112 when submitting
         if(e.getKeyCode() == 79){
+            System.out.println("key");
             if (showingHowToPlay) {
                 hideHowToPlay();
             } else if(!gameStarted){
@@ -466,6 +473,9 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
                 restartGame();
             }
         }
+
+        requestFocusInWindow();
+
     }
     
     public void keyReleased(KeyEvent e) {
