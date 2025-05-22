@@ -354,6 +354,7 @@ public class BoardGame {
 
     private boolean isValidWord(String word) {
         if (word == null || word.length() < 2){
+            counter = 0;
             return false;
         }
 
@@ -373,7 +374,7 @@ public class BoardGame {
                 high = mid - 1; // Target is in the left half
             }
         }
-
+        counter = 0;
         return false;
     }
 
@@ -491,6 +492,7 @@ public class BoardGame {
             }
             return result;
         } else {
+            counter = 0;
             return new String[0];
         }
 
