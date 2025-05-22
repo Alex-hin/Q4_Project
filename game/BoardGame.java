@@ -221,8 +221,10 @@ public class BoardGame {
     // Modified to display current player's tiles
     public void drawPlayerTiles(Graphics g) {
         for (int i = 0; i < getCurrentPlayerTiles().size(); i++) {
-            getCurrentPlayerTiles().get(i).setLoc(100 + 40 * i, 700);
-            getCurrentPlayerTiles().get(i).drawPTiles(g);
+            if(getCurrentPlayerTiles().get(i) != null){
+                getCurrentPlayerTiles().get(i).setLoc(100 + 40 * i, 700);
+                getCurrentPlayerTiles().get(i).drawPTiles(g);
+            } 
         }
         
         // Show current player and scores
@@ -288,7 +290,7 @@ public class BoardGame {
     // Modified to check if first play is in the center
     public boolean isValidPlay() {
         boolean bool = true;
-        if (counter == 0) { // No new tiles played
+        if (counter == 0 || counter == 1) { // No new tiles played
             bool = false;
         }
         
@@ -339,17 +341,21 @@ public class BoardGame {
         }
 
         if(!bool){
-            for(int i = 0; i < 7; i++){
-                if(!(newTiles[0][i] == 0 && newTiles[1][i] == 0 && board[0][0] == null)){
-                    playerTiles[currentPlayerIndex].add(board[newTiles[0][i]][newTiles[1][i]]);
-                    board[newTiles[0][i]][newTiles[1][i]] = null;
-                }
-            }
+            returnTiles();
         }
 
 
 
         return bool;
+    }
+
+    public void returnTiles(){
+        for(int i = 0; i < 7; i++){
+            if(!(newTiles[0][i] == 0 && newTiles[1][i] == 0 && board[0][0] == null)){
+                playerTiles[currentPlayerIndex].add(board[newTiles[0][i]][newTiles[1][i]]);
+                board[newTiles[0][i]][newTiles[1][i]] = null;
+            }
+        }
     }
 
     private boolean isValidWord(String word) {
@@ -805,7 +811,7 @@ public class BoardGame {
         // Put current tiles back in the bank
         Random rand = new Random();
         ArrayList<Tile> currentTiles = getCurrentPlayerTiles();
-        
+        returnTiles();
         // First remove all current tiles
         ArrayList<Tile> tilesToExchange = new ArrayList<>(currentTiles);
         for (Tile tile : tilesToExchange) {

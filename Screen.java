@@ -399,6 +399,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
     }
     
     private void passTurn() {
+        scrabble.returnTiles();
         passCounter++;
         scrabble.switchPlayer();
         scrabble.resetNewTileCounter();
@@ -497,8 +498,17 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
         // Select a tile from the player's rack
         if (y >= 700 && y <= 740 && x >= 100 && x <= 100 + 40 * scrabble.getNumTiles()) {
             int tileX = (x - 100) / 40;
-            selectedTile = scrabble.getTile(tileX);
-            statusLabel.setText("Tile selected: " + selectedTile.getLetter());
+
+            Tile potentialSelectedTile = scrabble.getTile(tileX);
+            if (potentialSelectedTile != null) {
+                selectedTile = potentialSelectedTile;
+                statusLabel.setText("Tile selected: " + selectedTile.getLetter());
+            } else {
+                // If getTile returns null (e.g., out of bounds or empty spot),
+                // ensure selectedTile is also null and give appropriate feedback.
+                selectedTile = null;
+                statusLabel.setText("No tile to select here.");
+            }
         }
 
         // Place the selected tile on the board
