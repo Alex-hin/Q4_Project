@@ -462,7 +462,6 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
     public void keyPressed(KeyEvent e) {
         //change key code to 112 when submitting
         if(e.getKeyCode() == 79){
-            System.out.println("key");
             if (showingHowToPlay) {
                 hideHowToPlay();
             } else if(!gameStarted){
