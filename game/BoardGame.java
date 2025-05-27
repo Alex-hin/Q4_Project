@@ -304,7 +304,7 @@ public class BoardGame {
     // Modified to check if first play is in the center
     public boolean isValidPlay() {
         boolean bool = true;
-        if (counter == 0 || counter == 1) {
+        if (counter == 0) {
             bool = false;
         }
         
