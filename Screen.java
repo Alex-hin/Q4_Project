@@ -6,24 +6,24 @@ import javax.swing.*;
 
 
 public class Screen extends JPanel implements KeyListener, MouseListener, ActionListener {
-    // instance variables
+    // Instance variables
     BoardGame scrabble;
     Tile selectedTile;
     private int winner = -1;
     private int winnerScore = 0;
     private boolean gameStarted = false;
     private boolean gameEnded = false;
-    private boolean showingHowToPlay = false; // Track if How to Play screen is showing
+    private boolean showingHowToPlay = false;
     private JButton startButton;
     private JButton endTurnButton;
-    private JButton exchangeTilesButton; // Button to exchange tiles
-    private JButton passButton; // Button to pass turn
-    private JButton restartButton; // Button to restart the game when ended
-    private JButton howToPlayButton; // Button to show How to Play screen
-    private JButton backButton; // Button to return from How to Play screen
-    private JLabel statusLabel; // Status messages for players
+    private JButton exchangeTilesButton;
+    private JButton passButton;
+    private JButton restartButton;
+    private JButton howToPlayButton;
+    private JButton backButton;
+    private JLabel statusLabel;
     private Confetti confetti;
-    private int passCounter = 0; // Count consecutive passes
+    private int passCounter = 0; 
     
     // Colors for the How to Play screen
     private final Color DW_COLOR = new Color(255, 150, 150); // Double word - light red
@@ -35,7 +35,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
         scrabble = new BoardGame();
         setFocusable(true);
         setLayout(null);
-        // add Key listener
+        // Add Key listener
         addKeyListener(this);
         addMouseListener(this);
         confetti = new Confetti(800, 800);
@@ -56,7 +56,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
         howToPlayButton.addActionListener(this);
         howToPlayButton.setVisible(true);
         
-        // Back Button (for How to Play screen)
+        // Back Button
         backButton = new JButton("Back");
         backButton.setBounds(300, 700, 200, 60);
         backButton.setFont(new Font("Arial", Font.BOLD, 24));
@@ -85,7 +85,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
         add(passButton);
         passButton.setVisible(false);
         
-        // Restart Button (for game end)
+        // Restart Button
         restartButton = new JButton("Play Again");
         restartButton.setBounds(300, 500, 200, 60);
         restartButton.setFont(new Font("Arial", Font.BOLD, 24));
@@ -103,15 +103,16 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
         setPreferredSize(new Dimension(800, 800));
     }
     
+
     public void animate() {
         while (true) {
-            // update the components
+            // Update the components
             if (confetti != null) {
                 confetti.update();
             }
-            // draw the screen
+            // Draw the screen
             repaint();
-            // sleep for 30 milliseconds
+            // Sleep for 30 milliseconds
             try {
                 Thread.sleep(30);
             } catch (InterruptedException e) {
@@ -120,6 +121,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
         }
     }
     
+    // Paints everything
     public void paintComponent(Graphics g) {
         requestFocusInWindow();
 
@@ -135,6 +137,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
         }
     }
     
+    // Draws the how to play screen
     private void drawHowToPlayScreen(Graphics g) {
         // Draw background
         g.setColor(new Color(0, 100, 0)); // Dark green background
@@ -226,6 +229,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
         drawMiniBoard(g, 500, 360, 240, 240);
     }
     
+    // Draws the mini board for the start screen
     private void drawMiniBoard(Graphics g, int x, int y, int width, int height) {
         int rows = 7;
         int cols = 7;
@@ -344,6 +348,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
         setFocusable(true);
     }
     
+    // How to play
     private void showHowToPlay() {
         showingHowToPlay = true;
         startButton.setVisible(false);
@@ -351,6 +356,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
         backButton.setVisible(true);
     }
     
+    // Hides how to play
     private void hideHowToPlay() {
         showingHowToPlay = false;
         startButton.setVisible(true);
@@ -358,6 +364,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
         backButton.setVisible(false);
     }
     
+    //Start the game
     private void startGame() {
         gameStarted = true;
         startButton.setVisible(false);
@@ -369,6 +376,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
         updateStatusLabel("Player 1's turn - Place tiles and end turn");
     }
     
+    // Ends the turn
     private void endTurn() {
         if (scrabble.isValidPlay()) {
             int score = scrabble.calculateScore();
@@ -387,7 +395,8 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
             updateStatusLabel("Invalid play! Try again.");
         }
     }
-    
+
+    // Exchange tiles
     private void exchangeTiles() {
         if (scrabble.getBankSize() >= 7) {
             scrabble.exchangeAllTiles();
@@ -398,6 +407,7 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
         }
     }
     
+    // Pass
     private void passTurn() {
         scrabble.returnTiles();
         passCounter++;
@@ -412,12 +422,14 @@ public class Screen extends JPanel implements KeyListener, MouseListener, Action
         }
     }
     
+    // Checks if the game has ended
     private void checkGameEnd() {
         if (scrabble.isGameOver()) {
             endGame();
         }
     }
     
+    // Ends the game
     private void endGame() {
         gameEnded = true;
         winner = scrabble.getWinner();

@@ -12,20 +12,20 @@ public class BoardGame {
 
     // Instance variables
     private ArrayList<Tile> bank;
-    private ArrayList<Tile>[] playerTiles; // Array of player tile lists
-    private ArrayList<Integer> playerScores; // Track scores for each player
+    private ArrayList<Tile>[] playerTiles;
+    private ArrayList<Integer> playerScores;
     private ArrayList<String> allWords;
-    private int currentPlayerIndex; // Current player (0-3)
+    private int currentPlayerIndex;
     private Tile[][] board;
     private int[][] newTiles;
     private static int counter;
     private static final int BOARD_SIZE = 15;
     private Tile[][] specialTiles;
-    private boolean firstPlay; // Flag to check if it's the first play
+    private boolean firstPlay;
     
     @SuppressWarnings("unchecked")
     public BoardGame() {
-        // Initialize player tiles and scores for 4 players
+        // Initializes tiles and scores for each player
         playerTiles = new ArrayList[4];
         for (int i = 0; i < 4; i++) {
             playerTiles[i] = new ArrayList<Tile>();
@@ -35,22 +35,25 @@ public class BoardGame {
             playerScores.add(0);
         }
         
+        // Instantiates instance variables
         bank = new ArrayList<Tile>();
         allWords = new ArrayList<String>();
         
-        currentPlayerIndex = 0; // Start with player 1
+        currentPlayerIndex = 0;
         board = new Tile[BOARD_SIZE][BOARD_SIZE];
         newTiles = new int[2][7];
         specialTiles = new Tile[BOARD_SIZE][BOARD_SIZE];
         counter = 0;
         firstPlay = true;
 
+        // Sets everything up
         readBank();
         readWords();
         giveInitialTiles();
         initializeSpecialTiles();
     }
 
+    // Reads the bank of letters and puts it into an ArrayList
     private void readBank() {
         String filePath = "game/letterBank.txt";
 
@@ -65,6 +68,7 @@ public class BoardGame {
         }
     }
 
+    // Reads the bank of all words and puts it into an ArrayList
     private void readWords() {
         String filePath = "game/words.txt";
 
@@ -79,11 +83,12 @@ public class BoardGame {
         }
     }
 
+    // Initializes special tiles
     private void initializeSpecialTiles() {
         int cellSize = 40;
  
  
-        // Triple Word Score Tiles (Red)
+        // Triple Word Score Tiles
         // Corners and middle edges
         specialTiles[0][0] = new TripleWordTile(0, 0, cellSize, cellSize);
         specialTiles[0][7] = new TripleWordTile(0, 7 * cellSize, cellSize, cellSize);
@@ -95,7 +100,7 @@ public class BoardGame {
         specialTiles[14][14] = new TripleWordTile(14 * cellSize, 14 * cellSize, cellSize, cellSize);
  
  
-        // Double Word Score Tiles (Pink/Light Red)
+        // Double Word Score Tiles
         // The diagonal pattern
         for (int i = 1; i < 5; i++) {
             specialTiles[i][i] = new DoubleWordTile(i * cellSize, i * cellSize, cellSize, cellSize);
@@ -109,7 +114,7 @@ public class BoardGame {
         specialTiles[7][7] = new DoubleWordTile(7 * cellSize, 7 * cellSize, cellSize, cellSize);
  
  
-        // Triple Letter Score Tiles (Blue)
+        // Triple Letter Score Tiles
         // Based on the board image
         specialTiles[1][5] = new TripleLetterTile(5 * cellSize, 1 * cellSize, cellSize, cellSize);
         specialTiles[1][9] = new TripleLetterTile(9 * cellSize, 1 * cellSize, cellSize, cellSize);
@@ -125,7 +130,7 @@ public class BoardGame {
         specialTiles[13][9] = new TripleLetterTile(9 * cellSize, 13 * cellSize, cellSize, cellSize);
  
  
-        // Double Letter Score Tiles (Light Blue)
+        // Double Letter Score Tiles
         // Based on the board image
         specialTiles[0][3] = new DoubleLetterTile(3 * cellSize, 0, cellSize, cellSize);
         specialTiles[0][11] = new DoubleLetterTile(11 * cellSize, 0, cellSize, cellSize);
@@ -153,8 +158,8 @@ public class BoardGame {
         specialTiles[14][11] = new DoubleLetterTile(11 * cellSize, 14 * cellSize, cellSize, cellSize);
     }
 
+    // Gives the tiles to the players
     public void giveInitialTiles() {
-        // Give initial tiles to all 4 players
         Random rand = new Random();
         for (int player = 0; player < 4; player++) {
             while (playerTiles[player].size() < 7 && bank.size() > 0) {
@@ -166,6 +171,7 @@ public class BoardGame {
         }
     }
 
+    // Draws the start screen
     public void drawStartScreen(Graphics g) {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, 800, 800);
@@ -178,10 +184,11 @@ public class BoardGame {
         g.drawString("Click the button to start the game", 220, 280);
     }
 
+    // Draws the board
     public void drawBoard(Graphics g) {
         int rows = 15, cols = 15, cellSize = 40;
 
-        // Draw board base color (green)
+        // Draw board base color
         g.setColor(new Color(0, 110, 0)); // Dark green background
         g.fillRect(0, 0, cols * cellSize, rows * cellSize);
 
@@ -207,6 +214,7 @@ public class BoardGame {
         drawPlayerTiles(g);
     }
 
+    // Draws the tiles on the board
     private void drawTilesBoard(Graphics g) {
         for (int i = 0; i < board.length; i++) {
             for (int f = 0; f < board[i].length; f++) {
@@ -239,6 +247,7 @@ public class BoardGame {
         }
     }
 
+    // Plays the sound if you have a valid word
     public void playValidSound(){
 		try {
             Clip clip = AudioSystem.getClip();
@@ -249,6 +258,7 @@ public class BoardGame {
         }
 	}
 
+    // Plays the invalid sound if you have an invalid word
     public void playInvalidSound(){
 		try {
             Clip clip = AudioSystem.getClip();
@@ -258,15 +268,18 @@ public class BoardGame {
             exc.printStackTrace(System.out);
         }
 	}
-    
+
+    // Returns the current players tiles
     public ArrayList<Tile> getCurrentPlayerTiles() {
         return playerTiles[currentPlayerIndex];
     }
     
+    // Returns the number of tiles the current player has
     public int getNumTiles() {
         return getCurrentPlayerTiles().size();
     }
     
+    // Returns the tile at an index from the players hand
     public Tile getTile(int index) {
         if (index >= 0 && index < getCurrentPlayerTiles().size()) {
             return getCurrentPlayerTiles().get(index);
@@ -274,6 +287,7 @@ public class BoardGame {
         return null; // Handle out of bounds
     }
     
+    // Plays a tile
     public void playTile(int x, int y, Tile tile) {
         if (x >= 0 && x < board.length && y >= 0 && y < board[0].length && board[x][y] == null) {
             board[x][y] = tile;
@@ -290,7 +304,7 @@ public class BoardGame {
     // Modified to check if first play is in the center
     public boolean isValidPlay() {
         boolean bool = true;
-        if (counter == 0 || counter == 1) { // No new tiles played
+        if (counter == 0 || counter == 1) {
             bool = false;
         }
         
@@ -313,7 +327,7 @@ public class BoardGame {
                 int row = newTiles[0][i];
                 int col = newTiles[1][i];
                 
-                // Check adjacent cells (up, down, left, right)
+                // Check adjacent cells
                 if ((row > 0 && board[row-1][col] != null && !isNewTile(row-1, col)) ||
                     (row < BOARD_SIZE-1 && board[row+1][col] != null && !isNewTile(row+1, col)) ||
                     (col > 0 && board[row][col-1] != null && !isNewTile(row, col-1)) ||
@@ -349,6 +363,7 @@ public class BoardGame {
         return bool;
     }
 
+    // Returns the tiles if the play was invalid
     public void returnTiles(){
         for(int i = 0; i < 7; i++){
             if(!(newTiles[0][i] == 0 && newTiles[1][i] == 0 && board[0][0] == null)){
@@ -358,6 +373,7 @@ public class BoardGame {
         }
     }
 
+    // Checks if it is a valid word
     private boolean isValidWord(String word) {
         if (word == null || word.length() < 2){
             counter = 0;
@@ -384,8 +400,9 @@ public class BoardGame {
         return false;
     }
 
+    // Gets the formed words
     private String[] getFormedWords() {
-        String[] words = new String[10]; // Assume a max of 10 words formed
+        String[] words = new String[10];
         int wordCount = 0;
 
         if (counter == 0){
@@ -401,15 +418,15 @@ public class BoardGame {
             vertical = true;
         }
 
-        // Check for horizontal word(s)
+        // Check for horizontal word
         if (horizontal) {
             int startCol = firstCol;
             int endCol = firstCol;
-            //find the beginning of the word
+            // Find the beginning of the word
             while (startCol > 0 && board[firstRow][startCol - 1] != null) {
                 startCol--;
             }
-            //find the end of the word
+            // Find the end of the word
             while (endCol < BOARD_SIZE - 1 && board[firstRow][endCol + 1] != null) {
                 endCol++;
             }
@@ -421,7 +438,7 @@ public class BoardGame {
                 words[wordCount++] = word;
             }
 
-            //check vertical words
+            // Check vertical words
             for (int col = firstCol; col < counter + firstCol; col++) {
                 int startRow = firstRow;
                 int endRow = firstRow;
@@ -466,7 +483,7 @@ public class BoardGame {
                 words[wordCount++] = word;
             }
 
-            //check horizontal words
+            // Check horizontal words
             for (int row = firstRow; row < counter + firstRow; row++) {
                 int startCol = firstCol;
                 int endCol = firstCol;
@@ -504,6 +521,7 @@ public class BoardGame {
 
     }
 
+    // Checks if all of the words are valid
     private boolean areWordsValid() {
         String[] words = getFormedWords();
         if (words == null) {
@@ -517,6 +535,7 @@ public class BoardGame {
         return true;
     }
 
+    // Sorts the list
     private void sortList(ArrayList<Integer> list) {
         for (int i = 0; i < list.size() - 1; i++) {
             for (int j = 0; j < list.size() - i - 1; j++) {
@@ -529,6 +548,7 @@ public class BoardGame {
         }
     }
 
+    // Checks if the words are continuous
     private boolean isContinuous() {
         if (counter <= 1) { // Only one tile played, it's continuous
             return true;
@@ -541,7 +561,7 @@ public class BoardGame {
             for (int i = 0; i < counter; i++) {
                 cols.add(newTiles[1][i]);
             }
-            sortList(cols); // Sort without Collections.sort
+            sortList(cols);
 
             for (int i = 0; i < cols.size() - 1; i++) {
                 if (cols.get(i + 1) - cols.get(i) > 1) {
@@ -561,7 +581,7 @@ public class BoardGame {
             for (int i = 0; i < counter; i++) {
                 rows.add(newTiles[0][i]);
             }
-            sortList(rows); // Sort without Collections.sort
+            sortList(rows);
 
             for (int i = 0; i < rows.size() - 1; i++) {
                 if (rows.get(i + 1) - rows.get(i) > 1) {
@@ -578,6 +598,7 @@ public class BoardGame {
         return true;
     }
 
+    // Checks if it is a straight line
     private boolean isStraightLine() {
         if (counter <= 1) { // Only one tile played, it's a straight line
             return true;
@@ -601,6 +622,7 @@ public class BoardGame {
         return sameRow || sameCol;
     }
     
+    // Checks if it is a new tile
     private boolean isNewTile(int row, int col) {
         for (int i = 0; i < counter; i++) {
             if (newTiles[0][i] == row && newTiles[1][i] == col) {
@@ -610,7 +632,6 @@ public class BoardGame {
         return false;
     }
     
-    // SCORING SYSTEM
     // Calculate score for the current play
     public int calculateScore() {
         int score = 0;
@@ -690,9 +711,8 @@ public class BoardGame {
         return score;
     }
     
+    // Finds the word position
     private int[] findWordPosition(String word) {
-        // Find where this word exists on the board
-        // Returns [row, col, isHorizontal]
         
         // Check horizontal
         for (int row = 0; row < BOARD_SIZE; row++) {
@@ -752,11 +772,13 @@ public class BoardGame {
         resetNewTileCounter();
     }
 
+    // Resets the new tile counter
     public void resetNewTileCounter() {
         counter = 0;
-        newTiles = new int[2][7]; // Reset the array as well
+        newTiles = new int[2][7];
     }
     
+    // Replinishes tiles
     private void replenishTiles(ArrayList<Tile> playerTiles) {
         Random rand = new Random();
         while (playerTiles.size() < 7 && bank.size() > 0) {
@@ -767,8 +789,8 @@ public class BoardGame {
         }
     }
     
+    // Switches to the next player
     public void switchPlayer() {
-        // Move to next player (cycling through 0-3)
         currentPlayerIndex = (currentPlayerIndex + 1) % 4;
     }
     
@@ -801,8 +823,7 @@ public class BoardGame {
         return currentPlayerIndex;
     }
     
-    // Keep all your other existing methods
-
+    // Gets the bank size
     public int getBankSize() {
         return bank.size();
     }
